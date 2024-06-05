@@ -36,7 +36,7 @@ for rack in racks:
             
             'rack_type': rack['type'],
             #setting initial weight of the shelf is random between 0 and maxed weight limit
-            'weight': np.random.randint(0, rack_shelf_weight_limit[rack['type']]),
+            'weight': np.random.randint(0, 2),
             
         }
         shelves.append(shelf)
@@ -56,44 +56,53 @@ for shelf in shelves:
                      j=[1, 1, 2, 3],
                      k=[2, 3, 3, 2],
                      opacity=0.5,
-                     color='blue',
+                     color='orange',
                      #displaying shelf serial number and weight as text
+                     
+                        
+                    
                     text=['shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight']), 'shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight']),'shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight']),'shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight'])],
+                    hoverinfo='text',
                     )
     meshes.append(mesh)
    
-#creating mesh for each shelf as a box in 3d
+#creating mesh for each shelf as a box in 3d, only if weight is greater than 0
 for shelf in shelves:
-    ratio=shelf['weight']/rack_shelf_weight_limit[shelf['rack_type']],
-    mesh = go.Mesh3d(x=[shelf['x'], shelf['x']+rack_shelf_dimensions[shelf['rack_type']][0], shelf['x']+rack_shelf_dimensions[shelf['rack_type']][0], shelf['x'], shelf['x'], shelf['x']+rack_shelf_dimensions[shelf['rack_type']][0], shelf['x']+rack_shelf_dimensions[shelf['rack_type']][0], shelf['x']],
-                     y=[shelf['y'], shelf['y'], shelf['y']+rack_shelf_dimensions[shelf['rack_type']][1], shelf['y']+rack_shelf_dimensions[shelf['rack_type']][1], shelf['y'], shelf['y'], shelf['y']+rack_shelf_dimensions[shelf['rack_type']][1], shelf['y']+rack_shelf_dimensions[shelf['rack_type']][1]],
-                     z=[shelf['z']+5, shelf['z']+5, shelf['z']+5, shelf['z']+5,shelf['z']+rack_shelf_dimensions[shelf['rack_type']][2]-5,shelf['z']+rack_shelf_dimensions[shelf['rack_type']][2]-5,shelf['z']+rack_shelf_dimensions[shelf['rack_type']][2]-5,shelf['z']+rack_shelf_dimensions[shelf['rack_type']][2]-5],
-                     i = [7, 0, 0, 0, 4, 4, 6, 6, 4, 0, 3, 2],
-                     j = [3, 4, 1, 2, 5, 6, 5, 2, 0, 1, 6, 3],
-                     k = [0, 7, 2, 3, 6, 7, 1, 1, 5, 5, 7, 6],
-                     
-                     
-                     #setting color based on ratio
-                     color='rgba('+str(int(np.dot(255,ratio)))+',0,0)',
-                        
-                     
+    if(shelf['weight']>0):
+        ratio=shelf['weight']/rack_shelf_weight_limit[shelf['rack_type']],
+        mesh = go.Mesh3d(x=[shelf['x'], shelf['x']+rack_shelf_dimensions[shelf['rack_type']][0], shelf['x']+rack_shelf_dimensions[shelf['rack_type']][0], shelf['x'], shelf['x'], shelf['x']+rack_shelf_dimensions[shelf['rack_type']][0], shelf['x']+rack_shelf_dimensions[shelf['rack_type']][0], shelf['x']],
+                        y=[shelf['y'], shelf['y'], shelf['y']+rack_shelf_dimensions[shelf['rack_type']][1], shelf['y']+rack_shelf_dimensions[shelf['rack_type']][1], shelf['y'], shelf['y'], shelf['y']+rack_shelf_dimensions[shelf['rack_type']][1], shelf['y']+rack_shelf_dimensions[shelf['rack_type']][1]],
+                        z=[shelf['z']+5, shelf['z']+5, shelf['z']+5, shelf['z']+5,shelf['z']+rack_shelf_dimensions[shelf['rack_type']][2]-5,shelf['z']+rack_shelf_dimensions[shelf['rack_type']][2]-5,shelf['z']+rack_shelf_dimensions[shelf['rack_type']][2]-5,shelf['z']+rack_shelf_dimensions[shelf['rack_type']][2]-5],
+                        i = [7, 0, 0, 0, 4, 4, 6, 6, 4, 0, 3, 2],
+                        j = [3, 4, 1, 2, 5, 6, 5, 2, 0, 1, 6, 3],
+                        k = [0, 7, 2, 3, 6, 7, 1, 1, 5, 5, 7, 6],
                         
                         
-                     flatshading=True
-                     )
-    meshes.append(mesh)
+                        #setting color based on ratio
+                        color='gray',
+                            
+                        text=['shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight']), 'shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight']),'shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight']),'shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight']),'shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight']), 'shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight']),'shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight']),'shelf: '+str(shelf['serial_number'])+' weight: '+str(shelf['weight'])],
+                        hoverinfo='text',
+                            
+                            
+                        flatshading=True
+                        )
+        meshes.append(mesh)
 #creating the meshes for each
 # rack as a cuboid
-    
+# creating the meshes for each rack as a cuboid
 for rack in racks:
-    mesh=go.Mesh3d(x=[rack['x'], rack['x']+rack_shelf_dimensions[rack['type']][0], rack['x']+rack_shelf_dimensions[rack['type']][0], rack['x'],rack['x'], rack['x']+rack_shelf_dimensions[rack['type']][0], rack['x']+rack_shelf_dimensions[rack['type']][0], rack['x']],
-                   y=[rack['y'], rack['y'], rack['y']+rack_shelf_dimensions[rack['type']][1], rack['y']+rack_shelf_dimensions[rack['type']][1],rack['y'], rack['y'], rack['y']+rack_shelf_dimensions[rack['type']][1], rack['y']+rack_shelf_dimensions[rack['type']][1]],
-                   z=[-3, -3, -3, -3, -3,-3,-3,-3],
-                  i=[0, 0, 0, 0, 4, 4, 4, 4],
-                    j=[1, 1, 2, 3, 5, 5, 6, 7],
-                    k=[2, 3, 3, 2, 6, 7, 7, 6],
-                   color='red'
-                  )
+    mesh = go.Mesh3d(
+        x=[rack['x'], rack['x'] + rack_shelf_dimensions[rack['type']][0], rack['x'] + rack_shelf_dimensions[rack['type']][0], rack['x'], rack['x'], rack['x'] + rack_shelf_dimensions[rack['type']][0], rack['x'] + rack_shelf_dimensions[rack['type']][0], rack['x']],
+        y=[rack['y'], rack['y'], rack['y'] + rack_shelf_dimensions[rack['type']][1], rack['y'] + rack_shelf_dimensions[rack['type']][1], rack['y'], rack['y'], rack['y'] + rack_shelf_dimensions[rack['type']][1], rack['y'] + rack_shelf_dimensions[rack['type']][1]],
+        z=[-3, -3, -3, -3, -3, -3, -3, -3],
+        i=[0, 0, 0, 0, 4, 4, 4, 4],
+        j=[1, 1, 2, 3, 5, 5, 6, 7],
+        k=[2, 3, 3, 2, 6, 7, 7, 6],
+        color='red',
+        hoverinfo='none',  # disable hoverinfo to prevent tooltip display
+          # initially select the first point
+    )
     meshes.append(mesh)
 #create meshes for the support columns of each rack from top shelf to bottom chelf
 
@@ -133,7 +142,7 @@ for rack in racks:
 fig = go.Figure(data=meshes+ [mesh])
 #st.write(fig)
 #plotting the figure to streamlit
-st.plotly_chart(fig, config={'displayModeBar': False})
+st.plotly_chart(fig)
 #st.plotly_chart(fig,axis=dict(visible=False))
 
 #show a list of all shelves and their current weights
